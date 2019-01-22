@@ -1,0 +1,19 @@
+language: go
+go:
+  - '1.11'
+branches:
+  only:
+    - master
+    - /\Av\d+\.\d+\.\d+\z/
+before_deploy:
+  - make package
+deploy:
+  provider: releases
+  api_key:
+    secure: WqlGDtNTI2JU4bdY+M9UAVT2u24ZUcDhAc5dgJWNGcrNP0favPIjAQvmNUf4UebbqX1yzu+bEz/KaUvtJ8ej0SoRpfsObEahTwV0PrJdmGh1z+953qW+A+ffehu82PV2dYYivOSSu2at1hSAoZiVN/cL1zR22rDYfjVjgbaVJBY19HxuGbG6tAnTiarRIJDBFWalGXvf/IlVsepJWP5qzaekQhVPNPvcadrD3oPkeR7PBegiVORO/qOGbnwx+25WGBA/P51dtK60nprZxE1wEBLtFoOhcxZHgKhN9bywLbPNHjHWqcSVzOzbkSRzycBtkjBiy8W4Y8k1QCxi6mTJ05/Loa69AxlOTb5Y36BbewwvmKFWe126hLIkZemTCVGg2fSiHx3Xlpp1jDgYRZFnQh+IXOXGP0RD9OSCmUPgqi2QLHHfyGCi2hBxo116+WJoiCGN3Isk3vR6ERNPGMENo5xRz78K9EDoBfwMUg1xQ7ZU/DYhD+Emx88TUDnLK9Z39v6ZiSDnajLELmXST97PLjob+m+/hqBQxgAzDw2xlDDtlzuQt+dDZ3u1+fznZADdtSLK9ukHmYjST461kHAeBfxcRgcsHKGJS6wbS2wufFapOI8YkFihXQc0E+yEYyu6N9W2kWRMHAcxYStJ9vjOv1DdZeZGwDmXHaWlBzdNRek=
+  file_glob: true
+  file: package/*
+  skip_cleanup: true
+  on:
+    repo: tsuty/table-doc
+    tags: true
