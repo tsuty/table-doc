@@ -1,0 +1,27 @@
+version: '3'
+services:
+  mysql:
+    container_name: table-doc-mysql
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: "tab1e-d0c"
+  postgres:
+    container_name: table-doc-postgres
+    image: postgres:9.6-alpine
+    environment:
+      POSTGRES_PASSWORD: "tab1e-d0c"
+  table-doc:
+    container_name: table-doc-go
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+      - postgres
+    environment:
+      MYSQL_PWD: "tab1e-d0c"
+      PGPASSWORD: "tab1e-d0c"
+      GO111MODULE: "on"
+    volumes:
+      - "./:/go/src/github.com/tsuty/table-doc"
+    command: ["go", "test", "-v"]
