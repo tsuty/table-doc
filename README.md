@@ -56,3 +56,10 @@ table-doc --mysql -s mysql -f markdown ./example
 - [bootstrap](example/mysql.html)
 - [markdown](example/mysql.md)
 
+## Memo 
+
+After `table-doc` command, edit HTML of generated for memo. that memo keeps after regenerate HTML. (the markdown always converts from HTML. editing not apply)
+
+- The schema memo is `data-table-doc="schema-memo"` attribute.
+- The table memo is `data-table-doc="table-memo"` attribute.
+- The column memo is `data-table-doc="column-memo"` attribute.
