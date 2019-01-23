@@ -1,4 +1,5 @@
 # table-doc
+[![Build Status](https://travis-ci.com/tsuty/table-doc.svg?branch=master)](https://travis-ci.com/tsuty/table-doc)
 
 Create SQL table documents.
 
