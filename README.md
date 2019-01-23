@@ -44,3 +44,15 @@ If not given and set any environment, it's asked from the prompt.
 * `html` very simple html
 * `bootstrap` a little rich html
 * `markdown` at first build _bootstrap_ and convert to markdown
+
+## Example
+
+execute following command 
+
+```bash
+table-doc --mysql -s mysql -f markdown ./example
+```
+
+- [bootstrap](example/mysql.html)
+- [markdown](example/mysql.md)
+
