@@ -385,7 +385,7 @@ func NewBootstrapHTML(dataSource string, path string) *HTMLTemplate {
                             <h3 class="card-title" data-table-doc="table-name">{{ html $table.Name }}</h3>
                             <div class="text-muted text-right" data-table-doc="table-type">{{ html $table.Type }}</div>
                             <div class="text-muted" data-table-doc="table-comment">{{ html $table.Comment }}</div>
-                            <div class="py-2 edit" data-table-doc="table-memo">{{ $table.Memo }}</div>
+                            <div class="py-2" data-table-doc="table-memo">{{ $table.Memo }}</div>
                             <div class="text-right"><a href="#{{ $table.Name }}-definition" data-toggle="collapse" class="btn btn-outline-secondary btn-sm">definition</a></div>
                             <pre class="collapse border p-4 mt-2 rounded bg-light" id="{{ $table.Name }}-definition" data-table-doc="table-definition">{{ html $table.Definition }}</pre>
                         </div>
