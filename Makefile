@@ -9,7 +9,7 @@ BUILD_DIR=build/$(GOOS)-$(GOARCH)
 all: build
 
 build:
-    mkdir -p $(BUILD_DIR)
+	mkdir -p $(BUILD_DIR)
 	cd cmd/table-doc && GOOS=$(GOOS) GOARCH=$(GOARCH) go build $(GOFLAGS) -o ../../$(BUILD_DIR)/table-doc
 
 clean:
