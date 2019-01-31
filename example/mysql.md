@@ -8,41 +8,41 @@ mysql
 
 
 
-* [columns_priv](#table-columns_priv) Column privileges
-* [db](#table-db) Database privileges
-* [engine_cost](#table-engine_cost) 
-* [event](#table-event) Events
-* [func](#table-func) User defined functions
-* [general_log](#table-general_log) General log
-* [gtid_executed](#table-gtid_executed) 
-* [help_category](#table-help_category) help categories
-* [help_keyword](#table-help_keyword) help keywords
-* [help_relation](#table-help_relation) keyword-topic relation
-* [help_topic](#table-help_topic) help topics
-* [innodb_index_stats](#table-innodb_index_stats) 
-* [innodb_table_stats](#table-innodb_table_stats) 
-* [ndb_binlog_index](#table-ndb_binlog_index) 
-* [plugin](#table-plugin) MySQL plugins
-* [proc](#table-proc) Stored Procedures
-* [procs_priv](#table-procs_priv) Procedure privileges
-* [proxies_priv](#table-proxies_priv) User proxy privileges
-* [server_cost](#table-server_cost) 
-* [servers](#table-servers) MySQL Foreign Servers table
-* [slave_master_info](#table-slave_master_info) Master Information
-* [slave_relay_log_info](#table-slave_relay_log_info) Relay Log Information
-* [slave_worker_info](#table-slave_worker_info) Worker Information
-* [slow_log](#table-slow_log) Slow log
-* [tables_priv](#table-tables_priv) Table privileges
-* [time_zone](#table-time_zone) Time zones
-* [time_zone_leap_second](#table-time_zone_leap_second) Leap seconds information for time zones
-* [time_zone_name](#table-time_zone_name) Time zone names
-* [time_zone_transition](#table-time_zone_transition) Time zone transitions
-* [time_zone_transition_type](#table-time_zone_transition_type) Time zone transition types
-* [user](#table-user) Users and global privileges
+* [columns_priv](#columns_priv) Column privileges
+* [db](#db) Database privileges
+* [engine_cost](#engine_cost) 
+* [event](#event) Events
+* [func](#func) User defined functions
+* [general_log](#general_log) General log
+* [gtid_executed](#gtid_executed) 
+* [help_category](#help_category) help categories
+* [help_keyword](#help_keyword) help keywords
+* [help_relation](#help_relation) keyword-topic relation
+* [help_topic](#help_topic) help topics
+* [innodb_index_stats](#innodb_index_stats) 
+* [innodb_table_stats](#innodb_table_stats) 
+* [ndb_binlog_index](#ndb_binlog_index) 
+* [plugin](#plugin) MySQL plugins
+* [proc](#proc) Stored Procedures
+* [procs_priv](#procs_priv) Procedure privileges
+* [proxies_priv](#proxies_priv) User proxy privileges
+* [server_cost](#server_cost) 
+* [servers](#servers) MySQL Foreign Servers table
+* [slave_master_info](#slave_master_info) Master Information
+* [slave_relay_log_info](#slave_relay_log_info) Relay Log Information
+* [slave_worker_info](#slave_worker_info) Worker Information
+* [slow_log](#slow_log) Slow log
+* [tables_priv](#tables_priv) Table privileges
+* [time_zone](#time_zone) Time zones
+* [time_zone_leap_second](#time_zone_leap_second) Leap seconds information for time zones
+* [time_zone_name](#time_zone_name) Time zone names
+* [time_zone_transition](#time_zone_transition) Time zone transitions
+* [time_zone_transition_type](#time_zone_transition_type) Time zone transition types
+* [user](#user) Users and global privileges
 
 
 
-## columns_priv <a id="table-columns_priv"></a>
+## columns_priv <a id="columns_priv"></a>
 
 BASE TABLE
 
@@ -75,7 +75,7 @@ CREATE TABLE `columns_priv` (
 
 [▲ top](#table-doc-top)
 
-## db <a id="table-db"></a>
+## db <a id="db"></a>
 
 BASE TABLE
 
@@ -139,7 +139,7 @@ CREATE TABLE `db` (
 
 [▲ top](#table-doc-top)
 
-## engine_cost <a id="table-engine_cost"></a>
+## engine_cost <a id="engine_cost"></a>
 
 BASE TABLE
 
@@ -170,7 +170,7 @@ CREATE TABLE `engine_cost` (
 
 [▲ top](#table-doc-top)
 
-## event <a id="table-event"></a>
+## event <a id="event"></a>
 
 BASE TABLE
 
@@ -233,7 +233,7 @@ CREATE TABLE `event` (
 
 [▲ top](#table-doc-top)
 
-## func <a id="table-func"></a>
+## func <a id="func"></a>
 
 BASE TABLE
 
@@ -260,7 +260,7 @@ CREATE TABLE `func` (
 
 [▲ top](#table-doc-top)
 
-## general_log <a id="table-general_log"></a>
+## general_log <a id="general_log"></a>
 
 BASE TABLE
 
@@ -290,7 +290,7 @@ CREATE TABLE `general_log` (
 
 [▲ top](#table-doc-top)
 
-## gtid_executed <a id="table-gtid_executed"></a>
+## gtid_executed <a id="gtid_executed"></a>
 
 BASE TABLE
 
@@ -315,7 +315,7 @@ CREATE TABLE `gtid_executed` (
 
 [▲ top](#table-doc-top)
 
-## help_category <a id="table-help_category"></a>
+## help_category <a id="help_category"></a>
 
 BASE TABLE
 
@@ -343,7 +343,7 @@ CREATE TABLE `help_category` (
 
 [▲ top](#table-doc-top)
 
-## help_keyword <a id="table-help_keyword"></a>
+## help_keyword <a id="help_keyword"></a>
 
 BASE TABLE
 
@@ -367,7 +367,7 @@ CREATE TABLE `help_keyword` (
 
 [▲ top](#table-doc-top)
 
-## help_relation <a id="table-help_relation"></a>
+## help_relation <a id="help_relation"></a>
 
 BASE TABLE
 
@@ -390,7 +390,7 @@ CREATE TABLE `help_relation` (
 
 [▲ top](#table-doc-top)
 
-## help_topic <a id="table-help_topic"></a>
+## help_topic <a id="help_topic"></a>
 
 BASE TABLE
 
@@ -422,7 +422,7 @@ CREATE TABLE `help_topic` (
 
 [▲ top](#table-doc-top)
 
-## innodb_index_stats <a id="table-innodb_index_stats"></a>
+## innodb_index_stats <a id="innodb_index_stats"></a>
 
 BASE TABLE
 
@@ -457,7 +457,7 @@ CREATE TABLE `innodb_index_stats` (
 
 [▲ top](#table-doc-top)
 
-## innodb_table_stats <a id="table-innodb_table_stats"></a>
+## innodb_table_stats <a id="innodb_table_stats"></a>
 
 BASE TABLE
 
@@ -488,7 +488,7 @@ CREATE TABLE `innodb_table_stats` (
 
 [▲ top](#table-doc-top)
 
-## ndb_binlog_index <a id="table-ndb_binlog_index"></a>
+## ndb_binlog_index <a id="ndb_binlog_index"></a>
 
 BASE TABLE
 
@@ -531,7 +531,7 @@ CREATE TABLE `ndb_binlog_index` (
 
 [▲ top](#table-doc-top)
 
-## plugin <a id="table-plugin"></a>
+## plugin <a id="plugin"></a>
 
 BASE TABLE
 
@@ -554,7 +554,7 @@ CREATE TABLE `plugin` (
 
 [▲ top](#table-doc-top)
 
-## proc <a id="table-proc"></a>
+## proc <a id="proc"></a>
 
 BASE TABLE
 
@@ -613,7 +613,7 @@ CREATE TABLE `proc` (
 
 [▲ top](#table-doc-top)
 
-## procs_priv <a id="table-procs_priv"></a>
+## procs_priv <a id="procs_priv"></a>
 
 BASE TABLE
 
@@ -649,7 +649,7 @@ CREATE TABLE `procs_priv` (
 
 [▲ top](#table-doc-top)
 
-## proxies_priv <a id="table-proxies_priv"></a>
+## proxies_priv <a id="proxies_priv"></a>
 
 BASE TABLE
 
@@ -683,7 +683,7 @@ CREATE TABLE `proxies_priv` (
 
 [▲ top](#table-doc-top)
 
-## server_cost <a id="table-server_cost"></a>
+## server_cost <a id="server_cost"></a>
 
 BASE TABLE
 
@@ -710,7 +710,7 @@ CREATE TABLE `server_cost` (
 
 [▲ top](#table-doc-top)
 
-## servers <a id="table-servers"></a>
+## servers <a id="servers"></a>
 
 BASE TABLE
 
@@ -747,7 +747,7 @@ CREATE TABLE `servers` (
 
 [▲ top](#table-doc-top)
 
-## slave_master_info <a id="table-slave_master_info"></a>
+## slave_master_info <a id="slave_master_info"></a>
 
 BASE TABLE
 
@@ -816,7 +816,7 @@ CREATE TABLE `slave_master_info` (
 
 [▲ top](#table-doc-top)
 
-## slave_relay_log_info <a id="table-slave_relay_log_info"></a>
+## slave_relay_log_info <a id="slave_relay_log_info"></a>
 
 BASE TABLE
 
@@ -853,7 +853,7 @@ CREATE TABLE `slave_relay_log_info` (
 
 [▲ top](#table-doc-top)
 
-## slave_worker_info <a id="table-slave_worker_info"></a>
+## slave_worker_info <a id="slave_worker_info"></a>
 
 BASE TABLE
 
@@ -898,7 +898,7 @@ CREATE TABLE `slave_worker_info` (
 
 [▲ top](#table-doc-top)
 
-## slow_log <a id="table-slow_log"></a>
+## slow_log <a id="slow_log"></a>
 
 BASE TABLE
 
@@ -940,7 +940,7 @@ CREATE TABLE `slow_log` (
 
 [▲ top](#table-doc-top)
 
-## tables_priv <a id="table-tables_priv"></a>
+## tables_priv <a id="tables_priv"></a>
 
 BASE TABLE
 
@@ -976,7 +976,7 @@ CREATE TABLE `tables_priv` (
 
 [▲ top](#table-doc-top)
 
-## time_zone <a id="table-time_zone"></a>
+## time_zone <a id="time_zone"></a>
 
 BASE TABLE
 
@@ -999,7 +999,7 @@ CREATE TABLE `time_zone` (
 
 [▲ top](#table-doc-top)
 
-## time_zone_leap_second <a id="table-time_zone_leap_second"></a>
+## time_zone_leap_second <a id="time_zone_leap_second"></a>
 
 BASE TABLE
 
@@ -1022,7 +1022,7 @@ CREATE TABLE `time_zone_leap_second` (
 
 [▲ top](#table-doc-top)
 
-## time_zone_name <a id="table-time_zone_name"></a>
+## time_zone_name <a id="time_zone_name"></a>
 
 BASE TABLE
 
@@ -1045,7 +1045,7 @@ CREATE TABLE `time_zone_name` (
 
 [▲ top](#table-doc-top)
 
-## time_zone_transition <a id="table-time_zone_transition"></a>
+## time_zone_transition <a id="time_zone_transition"></a>
 
 BASE TABLE
 
@@ -1070,7 +1070,7 @@ CREATE TABLE `time_zone_transition` (
 
 [▲ top](#table-doc-top)
 
-## time_zone_transition_type <a id="table-time_zone_transition_type"></a>
+## time_zone_transition_type <a id="time_zone_transition_type"></a>
 
 BASE TABLE
 
@@ -1099,7 +1099,7 @@ CREATE TABLE `time_zone_transition_type` (
 
 [▲ top](#table-doc-top)
 
-## user <a id="table-user"></a>
+## user <a id="user"></a>
 
 BASE TABLE
 
