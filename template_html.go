@@ -12,7 +12,6 @@ import (
 	"os"
 	"path"
 	"strconv"
-	"strings"
 	"text/template"
 )
 
@@ -44,34 +43,6 @@ type HTMLTemplate struct {
 	menu       string
 	dataSource string
 	assets     map[string]string
-}
-
-func (t *HTMLTemplate) makeTitle(schemas []*Schema) string {
-	var names []string
-	for _, schema := range schemas {
-		names = append(names, schema.Name)
-	}
-	return fmt.Sprintf("Schema %s | Table Doc", strings.Join(names, " "))
-}
-
-func (t *HTMLTemplate) lang() string {
-	var lang string
-	var ok bool
-
-	lang, ok = os.LookupEnv("LANG")
-	if !ok {
-		lang, ok = os.LookupEnv("LC_CTYPE")
-		if !ok {
-			lang = "en"
-		}
-	}
-
-	l := strings.Split(lang, ".")
-	if len(l) > 0 {
-		return l[0]
-	} else {
-		return "en"
-	}
 }
 
 func (t *HTMLTemplate) Read() ([]*Schema, error) {
@@ -153,7 +124,6 @@ func (t *HTMLTemplate) Write(schemas []*Schema) error {
 		}
 	}
 
-	lang := t.lang()
 	for _, schema := range newSchemas {
 		fpath := fmt.Sprintf("%s/%s.html", t.path, schema.Name)
 		file, err := os.OpenFile(fpath, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0644)
@@ -168,7 +138,6 @@ func (t *HTMLTemplate) Write(schemas []*Schema) error {
 
 		title := fmt.Sprintf("Schema %s | Table Doc", schema.Name)
 		data := map[string]interface{}{
-			"Lang": lang,
 			"Title": title,
 			"Schema": schema,
 			"Menu": menu[schema.Name],
@@ -250,64 +219,57 @@ func NewSimpleHTML(dataSource string, path string) *HTMLTemplate {
 {{- $activeSchemaName := .Schema.Name -}}
 <ul>
 {{- range $i, $schema := .Schemas }}
-    <li>{{ if eq $schema.Name $activeSchemaName }}{{ html $schema.Name }}{{ else }}<a href="{{ $schema.Name }}.html">{{ html $schema.Name }}</a>{{ end }}</li>
+  <li>{{ if eq $schema.Name $activeSchemaName }}{{ html $schema.Name }}{{ else }}<a href="{{ $schema.Name }}.html">{{ html $schema.Name }}</a>{{ end }}</li>
 {{- end }}
 </ul>
 `
 
 	// language=html
 	t.html = `<!DOCTYPE html>
-<html lang="{{ .Lang }}">
+<html>
 <head><meta charset="utf-8"><title>{{ .Title }}</title></head>
 <body>
 {{ .Menu }}
-
-<section data-table-doc="schema-container">
-    <h2 data-table-doc="schema-name">{{ html .Schema.Name }}</h2>
-    <div data-table-doc="schema-memo">{{ .Schema.Memo }}</div>
-    <ul>
-    {{- range $j, $table := .Schema.Tables }}
-        <li><a href="#{{ $table.Name }}">{{ html $table.Name }}</a></li>
-    {{- end }}
-    </ul>
-    {{- range $j, $table := .Schema.Tables }}
-    <div data-table-doc="table-container" id="{{ $table.Name }}">
-        <h3 data-table-doc="table-name">{{ html $table.Name }}</h3>
-        <dl>
-            <dt>Type</dt><dd data-table-doc="table-type">{{ html $table.Type }}</dd>
-            <dt>Comment</dt><dd data-table-doc="table-comment">{{ html $table.Comment }}</dd>
-            <dt>Memo</dt><dd data-table-doc="table-memo">{{ $table.Memo }}</dd>
-            <dt>Definition</dt><dd><pre data-table-doc="table-definition">{{ html $table.Definition }}</pre></dd>
-        </dl>
-        <table>
-            <thead>
-            <tr>
-                <th>&nbsp;</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Default</th>
-                <th>Nullable</th>
-                <th>Comment</th>
-                <th>Memo</th>
-            </tr>
-            </thead>
-            <tbody>
-            {{- range $k, $column := $table.Columns }}
-            <tr data-table-doc="column-container">
-                <td data-table-doc="column-position">{{ html $column.Position }}</td>
-                <td data-table-doc="column-name">{{ html $column.Name }}</td>
-                <td data-table-doc="column-type">{{ html $column.Type }}</td>
-                <td data-table-doc="column-default">{{ html $column.Default }}</td>
-                <td data-table-doc="column-nullable">{{ html $column.Nullable }}</td>
-                <td data-table-doc="column-comment">{{ html $column.Comment }}</td>
-                <td data-table-doc="column-memo">{{ $column.Memo }}</td>
-            </tr>
-            {{- end }}
-            </tbody>
-        </table>
-    </div>
-    {{- end }}
-</section>
+<main data-table-doc="schema-container">
+  <h2 data-table-doc="schema-name">{{ html .Schema.Name }}</h2>
+  <div data-table-doc="schema-memo">{{ .Schema.Memo }}</div>
+  <ul>
+  {{- range $j, $table := .Schema.Tables }}
+    <li><a href="#{{ $table.Name }}">{{ html $table.Name }}</a></li>
+  {{- end }}
+  </ul>
+  {{- range $j, $table := .Schema.Tables }}
+  <div data-table-doc="table-container" id="{{ $table.Name }}">
+    <h3 data-table-doc="table-name">{{ html $table.Name }}</h3>
+    <dl>
+      <dt>Type</dt><dd data-table-doc="table-type">{{ html $table.Type }}</dd>
+      <dt>Comment</dt><dd data-table-doc="table-comment">{{ html $table.Comment }}</dd>
+      <dt>Memo</dt><dd data-table-doc="table-memo">{{ $table.Memo }}</dd>
+      <dt>Definition</dt><dd><pre data-table-doc="table-definition">{{ html $table.Definition }}</pre></dd>
+    </dl>
+    <table>
+      <thead>
+      <tr>
+        <th>&nbsp;</th><th>Name</th><th>Type</th><th>Default</th><th>Nullable</th><th>Comment</th><th>Memo</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{- range $k, $column := $table.Columns }}
+      <tr data-table-doc="column-container">
+        <td data-table-doc="column-position">{{ html $column.Position }}</td>
+        <td data-table-doc="column-name">{{ html $column.Name }}</td>
+        <td data-table-doc="column-type">{{ html $column.Type }}</td>
+        <td data-table-doc="column-default">{{ html $column.Default }}</td>
+        <td data-table-doc="column-nullable">{{ html $column.Nullable }}</td>
+        <td data-table-doc="column-comment">{{ html $column.Comment }}</td>
+        <td data-table-doc="column-memo">{{ $column.Memo }}</td>
+      </tr>
+      {{- end }}
+      </tbody>
+    </table>
+  </div>
+  {{- end }}
+</main>
 </body>
 </html>
 `
@@ -326,104 +288,148 @@ func NewBootstrapHTML(dataSource string, path string) *HTMLTemplate {
 	// language=html
 	t.menu = `
 {{ $activeSchemaName := .Schema.Name }}
-<nav class="navbar navbar-dark bg-dark navbar-expand-sm" id="top">
-    <div class="container-fluid" >
-        <span class="navbar-brand mb-0 h1">Table-doc</span>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                {{- range $i, $schema := .Schemas }}
-                <li class="nav-item{{ if eq $schema.Name $activeSchemaName }} active{{ end }}">
-                    <a class="nav-link" href="{{ $schema.Name }}.html">{{ $schema.Name }}</a>
-                </li>
-                {{- end }}
-            </ul>
-        </div>
-    </div>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <button class="navbar-toggler navbar-toggler-right hidden-lg-up" type="button" data-toggle="collapse" data-target="#navbars">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <span class="navbar-brand">Table doc</span>
+  <div class="collapse navbar-collapse" id="navbars">
+    <ul class="navbar-nav mr-auto">
+      {{- range $i, $schema := .Schemas }}
+      <li class="nav-item{{ if eq $schema.Name $activeSchemaName }} active{{ end }}">
+        <a class="nav-link" href="{{ $schema.Name }}.html">{{ $schema.Name }}</a>
+      </li>
+      {{- end }}
+    </ul>
+  </div>
 </nav>
 `
 
 	// language=html
 	t.html = `<!DOCTYPE html>
-<html lang="{{ .Lang }}">
+<html>
 <head>
-    <title>{{ .Title }}</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="assets/bootstrap.4.2.1.css">
-    <script src="assets/jquery.3.3.1.js"></script>
-    <script src="assets/popper.1.14.3.js"></script>
-    <script src="assets/bootstrap.4.2.1.js"></script>
+  <title>{{ .Title }}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="assets/bootstrap.4.2.1.css">
+  <script src="assets/jquery.3.3.1.js"></script>
+  <script src="assets/popper.1.14.3.js"></script>
+  <script src="assets/bootstrap.4.2.1.js"></script>
+  <style>
+    body {
+      padding-top: 56px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      padding-bottom: 9px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 56px;
+      bottom: 0;
+      left: 0;
+      z-index: 1000;
+      padding: 20px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      border-right: 1px solid #eee;
+    }
+
+    .sidebar {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .sidebar .nav {
+      margin-bottom: 20px;
+    }
+
+    .sidebar .nav-item {
+      width: 100%;
+    }
+
+    .sidebar .nav-item + .nav-item {
+      margin-left: 0;
+    }
+
+    .sidebar .nav-link {
+      border-radius: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      font-weight: 300;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  </style>
+  <script>
+    $(function(){
+      $('td[data-table-doc="column-type"]').each(function() {
+        let td = $(this);
+        td.html(td.html().replace(/','/g , "', '"));
+      });
+    });
+  </script>
 </head>
-<body>
-
+<body id="table-doc-top">
 {{ .Menu }}
+<div class="container-fluid">
+  <div class="row">
+    <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+      <ul class="nav nav-pills flex-column">
+        <li class="nav-item"><span class="nav-link">Tables</span></li>
+        {{- range $j, $table := .Schema.Tables }}
+        <li class="nav-item"><a href="#{{ $table.Name }}" class="nav-link">{{ html $table.Name }}</a></li>
+        {{- end }}
+      </ul>
+    </nav>
 
-<div class="container-fluid py-3 bg-white rounded shadow-sm">
-    <section id="schema-{{ .Schema.Name }}" data-table-doc="schema-container">
-        <div class="container-fluid my-4">
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="card-title" data-table-doc="schema-name">{{ html .Schema.Name }}</h3>
-                    <div class="py-2" data-table-doc="schema-memo">{{ .Schema.Memo }}</div>
-                </div>
-            </div>
+    <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3" data-table-doc="schema-container">
+      <div class="card mb-5">
+        <div class="card-body">
+          <h1 class="card-title" data-table-doc="schema-name">{{ html .Schema.Name }}</h1>
+          <div class="py-2" data-table-doc="schema-memo">{{ .Schema.Memo }}</div>
         </div>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-xl-2 mb-4">
-                    <ul class="nav flex-column sticky-top">
-                        <li class="text-muted ">Tables</li>
-                        {{- range $j, $table := .Schema.Tables }}
-                        <li class="nav-item"><a href="#{{ $table.Name }}" class="nav-link p-0 text-truncate font-weight-light">{{ html $table.Name }}</a></li>
-                        {{- end }}
-                    </ul>
-                </div>
-                <div class="col-xl-10">
-                    {{- range $j, $table := .Schema.Tables }}
-                    <div class="card px-3 mb-5" id="{{ $table.Name }}" data-table-doc="table-container">
-                        <div class="card-body px-0 py-3">
-                            <h3 class="card-title" data-table-doc="table-name">{{ html $table.Name }}</h3>
-                            <div class="text-muted text-right" data-table-doc="table-type">{{ html $table.Type }}</div>
-                            <div class="text-muted" data-table-doc="table-comment">{{ html $table.Comment }}</div>
-                            <div class="py-2" data-table-doc="table-memo">{{ $table.Memo }}</div>
-                            <div class="text-right"><a href="#{{ $table.Name }}-definition" data-toggle="collapse" class="btn btn-outline-secondary btn-sm">definition</a></div>
-                            <pre class="collapse border p-4 mt-2 rounded bg-light" id="{{ $table.Name }}-definition" data-table-doc="table-definition">{{ html $table.Definition }}</pre>
-                        </div>
-                        <table class="table thead-light table-bordered table-sm">
-                            <thead class="thead-dark">
-                            <tr>
-                                <th>&nbsp;</th>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>Default</th>
-                                <th>Nullable</th>
-                                <th>Comment</th>
-                                <th>Memo</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {{- range $k, $column := $table.Columns }}
-                                <tr data-table-doc="column-container">
-                                    <td data-table-doc="column-position">{{ html $column.Position }}</td>
-                                    <td data-table-doc="column-name">{{ html $column.Name }}</td>
-                                    <td data-table-doc="column-type">{{ html $column.Type }}</td>
-                                    <td data-table-doc="column-default">{{ html $column.Default }}</td>
-                                    <td data-table-doc="column-nullable">{{ html $column.Nullable }}</td>
-                                    <td data-table-doc="column-comment">{{ html $column.Comment }}</td>
-                                    <td data-table-doc="column-memo">{{ $column.Memo }}</td>
-                                </tr>
-                            {{- end }}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="text-right mb-3">
-                        <a href="#top">top</a>
-                    </div>
-                    {{- end }}
-                </div>
-            </div>
+      </div>
+      {{- range $j, $table := .Schema.Tables }}
+      <div class="card px-3 mb-5" id="{{ $table.Name }}" data-table-doc="table-container">
+        <div class="card-body px-0 py-3">
+          <h3 class="card-title" data-table-doc="table-name">{{ html $table.Name }}</h3>
+          <div class="text-muted text-right" data-table-doc="table-type">{{ html $table.Type }}</div>
+          <div class="text-muted" data-table-doc="table-comment">{{ html $table.Comment }}</div>
+          <div class="py-2" data-table-doc="table-memo">{{ $table.Memo }}</div>
+          <div class="text-right"><a href="#{{ $table.Name }}-definition" data-toggle="collapse" class="btn btn-outline-secondary btn-sm">definition</a></div>
+          <pre class="collapse border p-4 mt-2 rounded bg-light" id="{{ $table.Name }}-definition" data-table-doc="table-definition">{{ html $table.Definition }}</pre>
         </div>
-    </section>
+        <table class="table thead-light table-bordered table-sm">
+          <thead class="thead-dark">
+          <tr>
+            <th>&nbsp;</th><th>Name</th><th>Type</th><th>Default</th><th>Nullable</th><th>Comment</th><th>Memo</th>
+          </tr>
+          </thead>
+          <tbody>
+            {{- range $k, $column := $table.Columns }}
+            <tr data-table-doc="column-container">
+              <td data-table-doc="column-position">{{ html $column.Position }}</td>
+              <td data-table-doc="column-name">{{ html $column.Name }}</td>
+              <td data-table-doc="column-type">{{ html $column.Type }}</td>
+              <td data-table-doc="column-default">{{ html $column.Default }}</td>
+              <td data-table-doc="column-nullable">{{ html $column.Nullable }}</td>
+              <td data-table-doc="column-comment">{{ html $column.Comment }}</td>
+              <td data-table-doc="column-memo">{{ $column.Memo }}</td>
+            </tr>
+            {{- end }}
+          </tbody>
+        </table>
+      </div>
+      <nav class="text-right mb-3"><a href="#table-doc-top">top</a></nav>
+      {{- end }}
+    </main>
+  </div>
 </div>
 </body>
 </html>

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 	"text/template"
 )
 
@@ -49,12 +50,12 @@ func NewMarkdownTemplate(dataSource string, path string) *MarkdownTemplate {
 {{ .Schema.Memo }}
 
 {{ range $i, $table := .Schema.Tables }}
-* [{{ $table.Name }}](#table-{{ $table.Name }}) {{ $table.Comment }}
+* [{{ html $table.Name }}](#{{ $table.Name }}) {{ $table.Comment }}
 {{- end }}
 
 {{ range $i, $table := .Schema.Tables }}
 
-## {{ html $table.Name }} <a id="table-{{ html $table.Name }}"></a>
+## {{ html $table.Name }} <a id="{{ $table.Name }}"></a>
 
 {{ html $table.Type }}
 
@@ -94,6 +95,7 @@ func (t *MarkdownTemplate) Write(schemas []*Schema) error {
 	}
 
 	menu := map[string]string{}
+	var schemaLinkReplaces [][]string
 	for _, schema := range newSchemas {
 		tmpl, err := template.New(schema.Name).Parse(t.menu)
 		if err != nil {
@@ -109,6 +111,13 @@ func (t *MarkdownTemplate) Write(schemas []*Schema) error {
 			return errors.New(fmt.Sprintf("MarkdownTemplate#Write: fail to execute template. %s", err.Error()))
 		}
 		menu[schema.Name] = string(buf.Bytes())
+		schemaLinkReplaces = append(
+			schemaLinkReplaces,
+			[]string{
+				fmt.Sprintf("%s.html", schema.Name),
+				fmt.Sprintf("%s.md", schema.Name),
+			},
+		)
 	}
 
 	for _, schema := range newSchemas {
@@ -122,8 +131,20 @@ func (t *MarkdownTemplate) Write(schemas []*Schema) error {
 		if err != nil {
 			return errors.New(fmt.Sprintf("MarkdownTemplate#Write: fail to parse template. %s", err.Error()))
 		}
-		if err := tmpl.Execute(file, map[string]interface{}{ "Schema": schema, "Menu": menu[schema.Name]}); err != nil {
+		buf := &bytes.Buffer{}
+		if err := tmpl.Execute(buf, map[string]interface{}{ "Schema": schema, "Menu": menu[schema.Name]}); err != nil {
 			return errors.New(fmt.Sprintf("MarkdownTemplate#Write: fail to execute template. %s", err.Error()))
+		}
+		markdown := string(buf.Bytes())
+		for _, schemaLinkReplace := range schemaLinkReplaces {
+			markdown = strings.Replace(markdown, schemaLinkReplace[0], schemaLinkReplace[1], -1)
+		}
+
+		if _, err := file.Write([]byte(markdown)); err != nil {
+			return errors.New(fmt.Sprintf("MarkdownTemplate#Write: fail to write template. %s", err.Error()))
+		}
+		if err := file.Close(); err != nil {
+			return errors.New(fmt.Sprintf("MarkdownTemplate#Write: fail to close template. %s", err.Error()))
 		}
 	}
 
