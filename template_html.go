@@ -11,7 +11,9 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"regexp"
 	"strconv"
+	"strings"
 	"text/template"
 )
 
@@ -173,6 +175,18 @@ func (t *HTMLTemplate) downloadAsset(filepath string, url string) error {
 	return nil
 }
 
+func (t *HTMLTemplate) cleanupContent(content string) string {
+	return html.UnescapeString(content)
+}
+
+func (t *HTMLTemplate) cleanupMemo(content string) string {
+	var lines []string
+	for _, line := range regexp.MustCompile("\r?\n").Split(content, -1) {
+		lines = append(lines, strings.TrimSpace(line))
+	}
+	return strings.Join(lines, "\n")
+}
+
 func (t *HTMLTemplate) parseSchema(file io.Reader) (*Schema, error) {
 	doc, err := goquery.NewDocumentFromReader(file)
 	if err != nil {
@@ -181,28 +195,29 @@ func (t *HTMLTemplate) parseSchema(file io.Reader) (*Schema, error) {
 	selection := doc.Find(htmlTemplateSchemaContainer).First()
 
 	schema := Schema{}
-	schema.Name = html.UnescapeString(selection.Find(htmlTemplateSchemaName).First().Text())
-	schema.Memo, err = selection.Find(htmlTemplateSchemaMemo).First().Html()
-	if err != nil {
-		return nil, errors.New(fmt.Sprintf("HTMLTemplate#parseSchema: fail to parse element. %s", err.Error()))
-	}
-	selection.Find(htmlTemplateTableContainer).Each(func(j int, t *goquery.Selection) {
+	schema.Name = t.cleanupContent(selection.Find(htmlTemplateSchemaName).First().Text())
+	memo, _:= selection.Find(htmlTemplateSchemaMemo).First().Html()
+	schema.Memo = t.cleanupMemo(memo)
+
+	selection.Find(htmlTemplateTableContainer).Each(func(j int, tableSelection *goquery.Selection) {
 		var table Table
-		table.Name = html.UnescapeString(t.Find(htmlTemplateTableName).First().Text())
-		table.Type = html.UnescapeString(t.Find(htmlTemplateTableType).First().Text())
-		table.Comment = html.UnescapeString(t.Find(htmlTemplateTableComment).First().Text())
-		table.Definition = html.UnescapeString(t.Find(htmlTemplateTableDefinition).First().Text())
-		table.Memo, _ = t.Find(htmlTemplateTableMemo).First().Html()
-		t.Find(htmlTemplateColumnContainer).Each(func(k int, c *goquery.Selection) {
+		table.Name = t.cleanupContent(tableSelection.Find(htmlTemplateTableName).First().Text())
+		table.Type = t.cleanupContent(tableSelection.Find(htmlTemplateTableType).First().Text())
+		table.Comment = t.cleanupContent(tableSelection.Find(htmlTemplateTableComment).First().Text())
+		table.Definition = t.cleanupContent(tableSelection.Find(htmlTemplateTableDefinition).First().Text())
+		memo, _:= tableSelection.Find(htmlTemplateTableMemo).First().Html()
+		table.Memo = t.cleanupMemo(memo)
+		tableSelection.Find(htmlTemplateColumnContainer).Each(func(k int, columnSelection *goquery.Selection) {
 			var column Column
-			pos, _ := strconv.Atoi(c.Find(htmlTemplateColumnPosition).First().Text())
+			pos, _ := strconv.Atoi(columnSelection.Find(htmlTemplateColumnPosition).First().Text())
 			column.Position = uint(pos)
-			column.Name = html.UnescapeString(c.Find(htmlTemplateColumnName).First().Text())
-			column.Type = html.UnescapeString(c.Find(htmlTemplateColumnType).First().Text())
-			column.Default = html.UnescapeString(c.Find(htmlTemplateColumnDefault).First().Text())
-			column.Nullable = html.UnescapeString(c.Find(htmlTemplateColumnNullable).First().Text())
-			column.Comment = html.UnescapeString(c.Find(htmlTemplateColumnComment).First().Text())
-			column.Memo, _ = c.Find(htmlTemplateColumnMemo).First().Html()
+			column.Name = t.cleanupContent(columnSelection.Find(htmlTemplateColumnName).First().Text())
+			column.Type = t.cleanupContent(columnSelection.Find(htmlTemplateColumnType).First().Text())
+			column.Default = t.cleanupContent(columnSelection.Find(htmlTemplateColumnDefault).First().Text())
+			column.Nullable = t.cleanupContent(columnSelection.Find(htmlTemplateColumnNullable).First().Text())
+			column.Comment = t.cleanupContent(columnSelection.Find(htmlTemplateColumnComment).First().Text())
+			memo, _ := columnSelection.Find(htmlTemplateColumnMemo).First().Html()
+			column.Memo = t.cleanupMemo(memo)
 			table.Columns = append(table.Columns, &column)
 		})
 		schema.Tables = append(schema.Tables, &table)
